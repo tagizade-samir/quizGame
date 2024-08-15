@@ -4,8 +4,9 @@ import { WelcomeScreen } from "./screens/welcome"
 export const App = () => {
   return (
     <div>
-      {/* <WelcomeScreen /> */}
+      {/* <WelcomeScreen homework 2 /> */}
       <Quiz />
+      <Quiz2 />
     </div>
   )
 }

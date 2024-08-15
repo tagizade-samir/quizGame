@@ -6,7 +6,7 @@ export const App = () => {
     <div>
       {/* <WelcomeScreen homework 2 /> */}
       <Quiz />
-      <Quiz2 />
+      <Quiz22222 />
     </div>
   )
 }

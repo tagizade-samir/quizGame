@@ -1,10 +1,9 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import { App } from './App'
+import * as ReactDOM from "react-dom/client";
+import "./index.css";
+import { RootNavigation } from "./navigation/rootNavigation";
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <RootNavigation />
+);
+
+// https://uselessfacts.jsph.pl/api/v2/facts/random

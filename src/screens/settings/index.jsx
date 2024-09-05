@@ -1,25 +1,56 @@
-import { useEffect } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { fetchCategories, selectConfig } from "../../store/slices/settings"
-import { Form } from "./form"
+import { memo, useCallback, useEffect, useRef, useState } from "react"
 import { Wrapper } from "../../components/wrapper"
-import { SkeletonLoading } from "../../components/skeleton"
+import { Button, Stack, Text } from "@chakra-ui/react"
 
 export const Settings = () => {
-  const dispatch = useDispatch()
-  const config = useSelector(selectConfig)
+  const [counter, setCounter] = useState(0)
+  const [counter2, setCounter2] = useState(0)
+
+  const myWorker = useRef(null)
 
   useEffect(() => {
-    dispatch(fetchCategories())
+    const worker = new Worker('worker.js')
+
+    worker.onmessage = function (event) {
+      console.log('Event from component', event.data)
+      setCounter2(event.data)
+    }
+
+    myWorker.current = worker
+
+    return () => {
+      myWorker.current.terminate()
+    }
   }, [])
 
-  if (!config.categories.length) {
-    return <SkeletonLoading />
+  const memoizedHandler = useCallback(() => setCounter2(prev => prev + 1), [])
+
+  const handleCounter1 = () => {
+    setCounter(prev => prev + 1)
+    if (myWorker.current) {
+      myWorker.current.postMessage(counter)
+    }
   }
 
   return (
     <Wrapper>
-      <Form config={config} />
+      <Stack>
+        <Text>Counter #1 - {counter}</Text>
+        <Button onClick={handleCounter1}>Increment #1</Button>
+        <MemoizedCounter handler={memoizedHandler} value={counter2} />
+      </Stack>
     </Wrapper>
   )
 }
+
+const Counter = ({handler, value}) => {
+  console.log('Child component render')
+  return (
+    <Stack>
+      <Text>Value: {value}</Text>
+      <Button onClick={handler}>Increment #1</Button>
+    </Stack>
+  )
+}
+
+const MemoizedCounter = memo(Counter)
